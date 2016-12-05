@@ -1,0 +1,55 @@
+---- 对其中几个函数作简单说明，详细说明，可参考MySQL文档：
+
+---- 1. MYSQL *mysql_init(MYSQL *mysql)
+
+	---- 初始化一个类型为MYSQL的数据结构，为执行mysql_real_connect()做准备。参数
+
+	mysql为指向该结构的指针，如果mysql为NULL，则新建并初始化一个MYSQL的数据结构。
+
+	新建的结构将在mysql_close()中释放。
+
+	---- 若成功，返回初始化的MYSQL数据结构的指针，否则返回NULL。
+
+---- 2. MYSQL *mysql_real_connect(MYSQL *mysql, const char *host,
+
+			---- const char *user, const char *passwd, const char *db,
+
+			---- unsigned int port, const char *unix_socket, unsigned int client_flag)
+
+	---- 与MySQL数据库引擎建立连接。在执行进一步的数据操作之前，必须保证mysql_re
+
+	al_connect()成功返回。
+
+	---- 参数mysql是mysql_init()的返回值；
+
+	---- 参数host是运行MySQL数据库引擎的机器的TCP/IP主机名，如为NULL则默认为“lo
+
+	calhost”；
+
+	---- 参数user和passwd是MySQL数据库的合法用户和口令；
+
+	---- 参数db是连接的数据库名；
+
+	---- 参数port，unix_socket和client_flag一般取默认值。
+
+---- 3. int mysql_query(MYSQL *mysql, const char *query)
+
+	---- 执行query字符串中的SQL语句，query必须以0结尾。如果成功，返回0。
+
+---- 4. MYSQL_RES *mysql_store_result(MYSQL *mysql)
+
+	---- 返回SELECT，SHOW，DESCRIBE, EXPLAIN等语句执行的结果。函数新建一个MYSQL_
+
+	RES的数据结构，把结果存储在该结构中。如果查询没有匹配的结果，则返回空数据集。
+
+	处理完结果集后，必须调用mysql_free_result()。
+
+	---- 如果出错，返回NULL，否则返回MYSQL_RES结构的指针。
+
+---- 5. MYSQL_ROW mysql_fetch_row(MYSQL_RES *result)
+
+	---- 取回结果集中的下一条记录，如果没有记录或出错，返回NULL。一条记录中的字段
+
+	数可以用mysql_num_fields(result)获得，各字段的值可以用row[0] 到 row[mysql_nu
+
+	m_fields(result)-1]的数组来访问。

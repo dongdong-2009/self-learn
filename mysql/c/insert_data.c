@@ -30,6 +30,8 @@ void print_mysql_error(const char *msg)
 	    puts(mysql_error(conn));
 }
 
+
+//执行sql语句，里面包含的函数
 int executesql(const char * sql)
 {
 	if(mysql_real_query(conn,sql,strlen(sql)))
