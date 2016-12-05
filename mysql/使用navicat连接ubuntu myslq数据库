@@ -1,0 +1,4 @@
+在使用navicat连接ubuntu mysql时候，出现无法连接的现象：
+	1、打开mysql的配置文件将bind-address:127.0.0.1注释掉
+	2、开启ubuntu的root权限
+	3、在ubuntu中登陆mysql，然后输入grant all on *.* to aaa@‘%‘ identified by ‘123456‘;
