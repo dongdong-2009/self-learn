@@ -1,0 +1,78 @@
+安装nginx需要安装perl支持的pcre库
+	apt-get install libpcre3			
+	apt-get install libpcre3-dev
+		如果在安装此包的时候报错，可能是需要安装某一个版本的libpcre3,但是已经安装了别的版本，此时可以直接google自己需要的版本
+		问题:
+			root@fyql:/mnt/hgfs/self-learn/nginx# sudo apt-get install libpcre3-dev:i386
+			Reading package lists... Done
+			Building dependency tree       
+			Reading state information... Done
+			Some packages could not be installed. This may mean that you have
+			requested an impossible situation or if you are using the unstable
+			distribution that some required packages have not yet been created
+			or been moved out of Incoming.
+			The following information may help to resolve the situation:
+
+			The following packages have unmet dependencies:
+			 libpcre3-dev:i386 : Depends: libpcre3:i386 (= 2:8.35-7.1ubuntu1.3) but 2:8.35-7.1ubuntu1.4 is to be installed
+			 E: Unable to correct problems, you have held broken packages.
+		解决：
+			直接googlelibpcre3:i386 (= 2:8.35-7.1ubuntu1.3)，然后下载相应的.deb包(我的虚拟机ubuntu是amd64的)
+			链接：https://launchpad.net/ubuntu/+source/pcre3/2:8.35-7.1ubuntu1.3
+			dpkg -i libpcre3_8.35-7.1ubuntu1.3_amd64.deb
+			apt-get libpcre3-dev
+	哈哈：成功解决问题，有收获就记录，习惯是良好的^_^
+
+下载nginx源码（http://nginx.org/download/）
+	我这里下载的是1.9.9的release版本
+	1、解压压缩包
+	2、编译（生成makefile）
+		./configure \
+			  --prefix=/home/fattiger/nginx-1.6.2 \
+			  --sbin-path=/home/fattiger/nginx-1.6.2/nginx \
+			  --conf-path=/home/fattiger/nginx-1.6.2/nginx.conf \
+			  --pid-path=/home/fattiger/nginx-1.6.2/nginx.pid \
+			  --with-http_ssl_module
+		提示信息：
+			Configuration summary
+			+ using system PCRE library(perl解析使用)
+		    + using system OpenSSL library
+			+ md5: using OpenSSL library
+			+ sha1: using OpenSSL library
+			+ using system zlib library
+
+			nginx path prefix: "/home/fattiger/nginx-1.6.2"
+			nginx binary file: "/home/fattiger/nginx-1.6.2/nginx"
+			nginx configuration prefix: "/home/fattiger/nginx-1.6.2"
+			nginx configuration file: "/home/fattiger/nginx-1.6.2/nginx.conf"
+			nginx pid file: "/home/fattiger/nginx-1.6.2/nginx.pid"
+			nginx error log file: "/home/fattiger/nginx-1.6.2/logs/error.log"
+			nginx http access log file: "/home/fattiger/nginx-1.6.2/logs/access.log"
+			nginx http client request body temporary files: "client_body_temp"
+			nginx http proxy temporary files: "proxy_temp"
+			nginx http fastcgi temporary files: "fastcgi_temp"
+			nginx http uwsgi temporary files: "uwsgi_temp"
+			nginx http scgi temporary files: "scgi_temp"
+	3、真正编译
+		make -j `cat /proc/cpuinfo | grep processor| wc -l`
+		成功提示信息：
+			-lpthread -lcrypt -lpcre -lssl -lcrypto -ldl -lz
+			make[1]: Leaving directory '/mnt/hgfs/self-learn/nginx/nginx-1.9.9'
+			make -f objs/Makefile manpage
+			make[1]: Entering directory '/mnt/hgfs/self-learn/nginx/nginx-1.9.9'
+			sed -e "s|%%PREFIX%%|/home/fattiger/nginx-1.6.2|" \
+			-e "s|%%PID_PATH%%|/home/fattiger/nginx-1.6.2/nginx.pid|" \
+			-e "s|%%CONF_PATH%%|/home/fattiger/nginx-1.6.2/nginx.conf|" \
+			-e "s|%%ERROR_LOG_PATH%%|/home/fattiger/nginx-1.6.2/logs/error.log|" \
+			< man/nginx.8 > objs/nginx.8
+			make[1]: Leaving directory '/mnt/hgfs/self-learn/nginx/nginx-1.9.9'
+
+	4、安装
+		make install
+
+
+
+
+
+
+
