@@ -13,6 +13,7 @@
  *  5) Remove -lsocket from the Makefile.
  */
 #include <stdio.h>
+#include <stdlib.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <netinet/in.h>
@@ -30,7 +31,7 @@
 
 #define SERVER_STRING "Server: jdbhttpd/0.1.0\r\n"
 
-void accept_request(int);
+//void accept_request(int);
 void bad_request(int);
 void cat(int, FILE *);
 void cannot_execute(int);
@@ -48,7 +49,7 @@ void unimplemented(int);
  * return.  Process the request appropriately.
  * Parameters: the socket connected to the client */
 /**********************************************************************/
-void accept_request(int client)
+void* accept_request(void* client_sock)
 {
  char buf[1024];
  int numchars;
@@ -60,8 +61,11 @@ void accept_request(int client)
  int cgi = 0;      /* becomes true if server decides this is a CGI
                     * program */
  char *query_string = NULL;
+ int client = *((int *)client_sock);
 
  numchars = get_line(client, buf, sizeof(buf));
+ printf("%s",buf);
+
  i = 0; j = 0;
  while (!ISspace(buf[j]) && (i < sizeof(method) - 1))
  {
@@ -69,11 +73,12 @@ void accept_request(int client)
   i++; j++;
  }
  method[i] = '\0';
+ printf("%s\n",method);
 
  if (strcasecmp(method, "GET") && strcasecmp(method, "POST"))
  {
   unimplemented(client);
-  return;
+  return NULL;
  }
 
  if (strcasecmp(method, "POST") == 0)
@@ -88,6 +93,7 @@ void accept_request(int client)
   i++; j++;
  }
  url[i] = '\0';
+ printf("%s\n",url);
 
  if (strcasecmp(method, "GET") == 0)
  {
@@ -125,6 +131,7 @@ void accept_request(int client)
  }
 
  close(client);
+ pthread_exit(NULL);
 }
 
 /**********************************************************************/
@@ -429,15 +436,19 @@ int startup(u_short *port)
  name.sin_family = AF_INET;
  name.sin_port = htons(*port);
  name.sin_addr.s_addr = htonl(INADDR_ANY);
+
  if (bind(httpd, (struct sockaddr *)&name, sizeof(name)) < 0)
   error_die("bind");
+ 
  if (*port == 0)  /* if dynamically allocating a port */
  {
-  int namelen = sizeof(name);
+  socklen_t namelen = sizeof(name);
   if (getsockname(httpd, (struct sockaddr *)&name, &namelen) == -1)
    error_die("getsockname");
   *port = ntohs(name.sin_port);
  }
+
+ 
  if (listen(httpd, 5) < 0)
   error_die("listen");
  return(httpd);
@@ -475,24 +486,29 @@ void unimplemented(int client)
 int main(void)
 {
  int server_sock = -1;
- u_short port = 0;
+ u_short port = 2222;
  int client_sock = -1;
  struct sockaddr_in client_name;
- int client_name_len = sizeof(client_name);
+ socklen_t client_name_len = sizeof(client_name);
  pthread_t newthread;
 
  server_sock = startup(&port);
  printf("httpd running on port %d\n", port);
 
+ int val = 1;
+ if(setsockopt(server_sock,SOL_SOCKET,SO_REUSEADDR,&val,sizeof(val)) < 0)
+ {
+	perror("setsockopt()");
+	exit(1);
+ }
+
  while (1)
  {
-  client_sock = accept(server_sock,
-                       (struct sockaddr *)&client_name,
-                       &client_name_len);
+  client_sock = accept(server_sock,(struct sockaddr *)&client_name,&client_name_len);
   if (client_sock == -1)
    error_die("accept");
  /* accept_request(client_sock); */
- if (pthread_create(&newthread , NULL, accept_request, client_sock) != 0)
+ if (pthread_create(&newthread , NULL, accept_request, &client_sock) != 0)
    perror("pthread_create");
  }
 
