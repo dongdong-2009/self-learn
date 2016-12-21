@@ -17,14 +17,15 @@ void signal_cb(uv_signal_t* handle, int signum)
 {  
 	printf("stop process!\n");  
 
-	uv_idle_stop(&idler);   //停止空转  
-	uv_close((uv_handle_t*)handle, NULL);   //停止消息监听  
+	//uv_idle_stop(&idler);   //停止空转  
+	//uv_close((uv_handle_t*)handle, NULL);   //停止消息监听  
 }  
 
 void wait_for_a_while(uv_idle_t* handle, int status)  
 {  
 	counter++;  
 	printf("the counter is:%ld\n", counter);  
+	sleep(1);
 }  
 
 int main()  
