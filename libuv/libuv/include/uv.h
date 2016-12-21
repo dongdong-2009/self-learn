@@ -1936,13 +1936,13 @@ union uv_any_req {
 
 struct uv_loop_s {
   /* User data - use this for whatever. */
-  void* data;
+  void* data;					//用户数据域
   /* The last error */
   uv_err_t last_err;
   /* Loop reference counting */
-  unsigned int active_handles;
-  ngx_queue_t handle_queue;
-  ngx_queue_t active_reqs;
+  unsigned int active_handles;	//uv_loop_t的引用计数
+  ngx_queue_t handle_queue;		//uv_handle_t族的队列
+  ngx_queue_t active_reqs;		//uv_req_t族的队列
   UV_LOOP_PRIVATE_FIELDS
 };
 
