@@ -78,6 +78,7 @@ int main(void)
 	memset(net_tm, 0, sizeof(struct tm));  
 
 	memset(&addr, 0, sizeof(addr));  
+	addr.sin_family = AF_INET;
 	addr.sin_addr.s_addr = inet_addr(ip);  
 	addr.sin_port = htons(NTP_SRV_PORT); //123 
 
@@ -107,4 +108,4 @@ int main(void)
 	close(sockfd);  
 
 	return (0);  
-}  
+} 
