@@ -1,7 +1,12 @@
 LDFLAGS := -L../../libuv/
 CFLAGS	:= -I../../libuv/include
-LIB		:= -llibuv
+LIB		:= -luv -lpthread
+BIN		:= test
 
-hello world : main.o
+$(BIN) : main.o
 	gcc $(CFLAGS) $(LDFLAGS) $^ -o $@ $(LIB)
 	
+.PHONY : clean
+
+clean : 
+	-rm -rf *.o $(BIN)
