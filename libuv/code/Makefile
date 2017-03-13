@@ -1,5 +1,5 @@
-LDFLAGS := -L../../libuv/
-CFLAGS	:= -I../../libuv/include
+LDFLAGS := -L../libuv/
+CFLAGS	:= -I../libuv/include
 LIB		:= -luv -lpthread
 BIN		:= test
 
