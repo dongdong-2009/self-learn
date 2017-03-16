@@ -43,6 +43,7 @@ int main()
 	uv_idle_init(loop, &idler);  
 	uv_idle_start(&idler, wait_for_a_while);  
 
+	sleep(3);
 	uv_run(loop, UV_RUN_DEFAULT);  
 	return 0;  
 }
