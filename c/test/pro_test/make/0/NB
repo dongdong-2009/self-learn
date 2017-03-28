@@ -1,0 +1,4 @@
+.RECIPEPREFIX = >
+
+all:
+> @echo hello wolrd
