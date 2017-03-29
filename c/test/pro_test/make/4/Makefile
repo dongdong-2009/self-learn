@@ -16,4 +16,5 @@ ${BIN} : *.o
 
 
 clean :
+	echo "\33[0m"
 	-rm -rf *.o ${BIN}
