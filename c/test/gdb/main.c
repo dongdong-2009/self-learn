@@ -10,6 +10,7 @@ void fun(void)
 
 int main(void)
 {
+	printf("===================start\n");
 	fun();
 	return 0;
 }
