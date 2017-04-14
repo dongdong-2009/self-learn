@@ -1,0 +1,7 @@
+var := make.defs
+
+other:
+	@echo "\n\n-----------------\n\n"
+
+tar1 :
+	@echo "\n\n\n\33[32maaaaaaaaaaaaaaaaaaaa\33[0m\n\n\n"
