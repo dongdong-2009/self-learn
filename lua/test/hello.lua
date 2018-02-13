@@ -1,3 +1,3 @@
-#!/usr/bin/lua
+#!/usr/local/bin/lua
 
-print("hello lua")
+print("hello lua");
