@@ -15,4 +15,9 @@ function add(...)
 	return s
 end
 
+function cut(...)
+	return ...
+end
+
 print(add(1,2,3,'4',5,6,7,8,9))
+print(cut(a,b,c,d))
