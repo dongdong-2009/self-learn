@@ -9,6 +9,7 @@
 链接：https://www.jianshu.com/p/ef0bafd9b6a2
 來源：简书
 著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+http://blog.csdn.net/suifcd/article/details/78928559
 --]]
 local str = "12ab34,eed,56"
 local func_itor = string.gmatch(str, "%d+")
